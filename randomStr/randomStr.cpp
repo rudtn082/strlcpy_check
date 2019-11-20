@@ -1,32 +1,50 @@
 #include <iostream>
-#include <fstream>
 #include <string>
-#include <ctime>
+#include <time.h>
+#include <Math.h>
+//#define MAX_SIZE 10000
 using namespace std;
 
-#define MAX_SIZE 100000
-
 size_t
-strlcpy(char* dst, const char* src, size_t siz)
+strlcpy(char *dst, const char *src, size_t siz)
 {
-	char* d = dst;
-	const char* s = src;
+	char *d = dst;
+	const char *s = src;
 	size_t n = siz;
-	/* Copy as many bytes as will fit */
+
 	if (n != 0) {
 		while (--n != 0) {
 			if ((*d++ = *s++) == '\0')
 				break;
 		}
 	}
-	/* Not enough room in dst, add NUL and traverse rest of src */
+
 	if (n == 0) {
 		if (siz != 0)
-			* d = '\0';		/* NUL-terminate dst */
+			*d = '\0';
 		while (*s++)
 			;
 	}
-	return(s - src - 1);	/* count does not include NUL */
+
+	return(s - src - 1);
+}
+
+size_t
+strlcpy2(char* dst, const char* src, size_t siz)
+{
+	size_t srclen, returnV = strlen(src);
+
+	siz--;
+
+	srclen = returnV;
+
+	if (srclen > siz)
+		srclen = siz;
+
+	memcpy(dst, src, srclen);
+	dst[srclen] = '\0';
+
+	return returnV;
 }
 
 static const char alphanum[] =
@@ -44,46 +62,54 @@ char genRandom()
 }
 
 int main() {
-	ofstream outFile("output.txt");
+	time_t start, end;
+	double result;
 
-	srand(time(0));
+	int MAX_SIZE = 1000;
+
+
 	string Str;
-	char carray[30];
-	string istrue = "false";
+	char carray[100];
 
-	int trueN = 0, falseN = 0;
-	for (int i = 0; i < MAX_SIZE; ++i) {
-		int temp = (rand() % 30); // 문자열의 길이는 0 ~ 30
-		
-		// temp 길이만큼 랜덤 문자열 생성
-		for (int j = 0; j < temp; ++j)
-		{
-			Str += genRandom();
-		}
-
-		outFile << "문자열 = " << Str << endl << "길이 = " << Str.length() << endl;
-		//// strlcpy 비교 ////
-		if (strlcpy(carray, Str.c_str(), sizeof(carray)) == strlen(Str.c_str())) {
-			istrue = "true";
-			trueN++;
-		}
-		else {
-			istrue = "false";
-			falseN++;
-		}
-		outFile << istrue << endl << endl;
-
-		// 초기화
-		Str = "";
-		istrue = "false";
+	for (int j = 0; j < 100; ++j) // 문자열의 길이는 10000
+	{
+		Str += genRandom();
 	}
 
-	outFile << endl << "if문 true 횟수 : " << trueN << endl << "if문 false 횟수 : " << falseN << endl;
+	for (int i = 1; i < 7; i++) {
+		cout << "횟수 = " << MAX_SIZE << endl;
 
-	outFile.close();
+		start = clock(); //시간 측정 시작
 
-	cout << MAX_SIZE << "번 완료" << endl;
-	cout << "if문 true 횟수 : " << trueN << endl << "if문 false 횟수 : " << falseN << endl;
+		for (int i = 0; i < MAX_SIZE; ++i) {
 
+			strlcpy(carray, Str.c_str(), sizeof(carray));
+		}
+
+		end = clock(); //시간 측정 끝
+		result = (double)(end - start) / CLOCKS_PER_SEC;
+
+		cout << "기존 strlcpy = " << result << "초" << endl;
+
+		////////////////////////////////////////////////// 2번째 방법
+
+		start = clock(); //시간 측정 시작
+
+		for (int i = 0; i < MAX_SIZE; ++i) {
+
+			strlcpy2(carray, Str.c_str(), sizeof(carray));
+		}
+
+		end = clock(); //시간 측정 끝
+		result = (double)(end - start) / CLOCKS_PER_SEC;
+		cout << "변경 strlcpy = " << result << "초" << endl;
+
+
+
+		MAX_SIZE = MAX_SIZE * 5;
+		cout << endl;
+	}
+
+	system("pause");
 	return 0;
 }

@@ -1,0 +1,3 @@
+﻿  randomStr.cpp
+c:\users\kyungsoo\source\repos\strlcpy_check\randomstr\randomstr.cpp(53): warning C4129: '|': 문자 이스케이프 시퀀스를 인식할 수 없습니다.
+  randomStr.vcxproj -> C:\Users\kyungsoo\source\repos\strlcpy_check\x64\Debug\randomStr.exe
