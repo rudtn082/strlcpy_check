@@ -1,10 +1,8 @@
 #include <iostream>
-#include <string>
 #include <time.h>
-#include <Math.h>
-//#define MAX_SIZE 10000
 using namespace std;
 
+// 개선 전 소스코드
 size_t
 strlcpy(char *dst, const char *src, size_t siz)
 {
@@ -29,6 +27,7 @@ strlcpy(char *dst, const char *src, size_t siz)
 	return(s - src - 1);
 }
 
+// 개선 후 소스코드
 size_t
 strlcpy2(char* dst, const char* src, size_t siz)
 {
@@ -67,11 +66,10 @@ int main() {
 
 	int MAX_SIZE = 1000;
 
-
 	string Str;
 	char carray[100];
 
-	for (int j = 0; j < 100; ++j) // 문자열의 길이는 10000
+	for (int j = 0; j < 100; ++j)
 	{
 		Str += genRandom();
 	}
@@ -79,32 +77,28 @@ int main() {
 	for (int i = 1; i < 7; i++) {
 		cout << "횟수 = " << MAX_SIZE << endl;
 
-		start = clock(); //시간 측정 시작
+		start = clock();
 
 		for (int i = 0; i < MAX_SIZE; ++i) {
 
 			strlcpy(carray, Str.c_str(), sizeof(carray));
 		}
 
-		end = clock(); //시간 측정 끝
+		end = clock();
 		result = (double)(end - start) / CLOCKS_PER_SEC;
 
 		cout << "기존 strlcpy = " << result << "초" << endl;
 
-		////////////////////////////////////////////////// 2번째 방법
-
-		start = clock(); //시간 측정 시작
+		start = clock();
 
 		for (int i = 0; i < MAX_SIZE; ++i) {
 
 			strlcpy2(carray, Str.c_str(), sizeof(carray));
 		}
 
-		end = clock(); //시간 측정 끝
+		end = clock();
 		result = (double)(end - start) / CLOCKS_PER_SEC;
-		cout << "변경 strlcpy = " << result << "초" << endl;
-
-
+		cout << "개선 strlcpy = " << result << "초" << endl;
 
 		MAX_SIZE = MAX_SIZE * 5;
 		cout << endl;
